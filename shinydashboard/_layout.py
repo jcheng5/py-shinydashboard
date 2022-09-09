@@ -1,10 +1,9 @@
 from typing import List, Optional
+
 import htmltools as ht
 from htmltools import tags
 
 from ._htmldeps import deps_adminlte
-
-__all__ = ("page",)
 
 
 # TODO: Use all arguments
@@ -80,7 +79,6 @@ def _body(
 
 def header(
     *args: ht.TagChildArg,
-    title: ht.TagChildArg = None,
     children: Optional[List[ht.TagChildArg]] = None,
     children_right: Optional[List[ht.TagChildArg]] = None,
 ) -> ht.Tag:
@@ -116,7 +114,15 @@ def header(
     )
 
 
+def header_link(href: str, label: ht.TagChild) -> ht.Tag:
+    return tags.li(
+        {"class": "nav-item d-none d-md-block"},
+        tags.a({"href": href, "class": "nav-link"}, label),
+    )
+
+
 def menu_dropdown():
+    # TODO: Make this not all hardcoded
 
     return tags.ul(
         {"class": "navbar-nav ms-auto"},
@@ -470,11 +476,4 @@ def menu_dropdown():
                 ),
             ),
         ),
-    )
-
-
-def header_link(href: str, label: ht.TagChild) -> ht.Tag:
-    return tags.li(
-        {"class": "nav-item d-none d-md-block"},
-        tags.a({"href": href, "class": "nav-link"}, label),
     )
