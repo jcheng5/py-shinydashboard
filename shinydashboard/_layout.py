@@ -78,9 +78,9 @@ def _body(
 
 
 def header(
-    *args: ht.TagChildArg,
-    children: Optional[List[ht.TagChildArg]] = None,
-    children_right: Optional[List[ht.TagChildArg]] = None,
+    *args: ht.TagChild,
+    children: Optional[List[ht.TagChild]] = None,
+    children_right: Optional[List[ht.TagChild]] = None,
 ) -> ht.Tag:
     # Navbar
     return tags.nav(
@@ -121,11 +121,8 @@ def header_link(href: str, label: ht.TagChild) -> ht.Tag:
     )
 
 
-def menu_dropdown():
-    # TODO: Make this not all hardcoded
-
-    return tags.ul(
-        {"class": "navbar-nav ms-auto"},
+def dummy2():
+    return ht.TagList(
         # Navbar Search
         tags.li(
             {"class": "nav-item"},

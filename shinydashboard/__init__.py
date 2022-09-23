@@ -7,6 +7,7 @@ from ._card import *
 from ._layout import *
 from ._sidebar import *
 from ._valuebox import *
+from ._dropdown import *
 
 __all__ = (
     "brand",
@@ -18,4 +19,7 @@ __all__ = (
     "body",
     "value_box",
     "card",
+    "MenuType",
+    "item_message",
+    "item_notification",
 )

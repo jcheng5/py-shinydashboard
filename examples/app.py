@@ -1,7 +1,6 @@
 from pathlib import Path
 from shiny import Inputs, Outputs, Session, App, render, ui
 import shinydashboard as sdb
-from shinydashboard._layout import menu_dropdown, header_link
 import htmltools as ht
 
 # TODO: I don't think the stretched-links are accessible if they don't have a visible
@@ -9,8 +8,41 @@ import htmltools as ht
 
 app_ui = sdb.page(
     header=sdb.header(
-        children=[header_link("https://posit.co", "Posit")],
-        children_right=[menu_dropdown()],
+        children=[sdb.header_link("https://posit.co", "Posit")],
+        children_right=[
+            sdb.menu_dropdown(
+                sdb.MenuType.Messages,
+                sdb.item_message(
+                    "Joe Cheng",
+                    "Hello, world!",
+                    icon=ht.tags.i(class_="fs-2 text-info fa fas fa-info-circle"),
+                    time="4 minutes ago",
+                ),
+                sdb.item_message(
+                    "Winston Chang",
+                    ht.TagList(
+                        "I need a code review ", ht.strong("right now"), " please!"
+                    ),
+                    icon=ht.tags.i(
+                        class_="fs-2 text-danger fa fas fa-exclamation-circle"
+                    ),
+                    time="4 minutes ago",
+                    href="https://github.com/",
+                ),
+                header="Recent messages",
+            ),
+            sdb.menu_dropdown(
+                sdb.MenuType.Notifications,
+                sdb.item_notification(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    time="An hour ago",
+                ),
+                sdb.item_notification(
+                    "Hello!",
+                    time="An hour ago",
+                ),
+            ),
+        ],
     ),
     sidebar=sdb.sidebar(
         sdb.brand("Hello World"),
@@ -79,7 +111,7 @@ app_ui = sdb.page(
                 children=["This is cool I guess"],
             ),
             sdb.card(
-                [ht.tags.i(class_="fa fas fa-search me-1"), "Hello"],
+                ht.TagList(ht.tags.i(class_="fa fas fa-search me-1"), "Hello"),
                 width=True,
                 collapsed=False,
                 maximizable=True,

@@ -1,7 +1,9 @@
-from typing import Callable, Optional, TypeVar, Union
+from typing import Callable, List, Optional, TypeVar, Union
 
 import htmltools as ht
 from htmltools import tags
+
+T = TypeVar("T")
 
 
 def wrap_with_col(width: Union[int, bool, None], x: ht.TagChild) -> ht.TagChild:
@@ -36,3 +38,12 @@ def bg_classes(color: str, gradient: bool = False) -> str:
 
 def join(*args: Optional[str]) -> str:
     return " ".join([x for x in args if x])
+
+
+def insert_dividers(lst: List[T], divider: T) -> List[T]:
+    res: List[T] = []
+    for el in lst:
+        if len(res) > 0:
+            res.append(divider)
+        res.append(el)
+    return res
