@@ -79,8 +79,8 @@ def _body(
 
 def header(
     *args: ht.TagChild,
-    children: Optional[List[ht.TagChild]] = None,
-    children_right: Optional[List[ht.TagChild]] = None,
+    children: Optional[List[ht.TagChildArg]] = None,
+    children_right: Optional[List[ht.TagChildArg]] = None,
 ) -> ht.Tag:
     # Navbar
     return tags.nav(

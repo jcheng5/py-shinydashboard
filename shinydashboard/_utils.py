@@ -6,14 +6,15 @@ from htmltools import tags
 T = TypeVar("T")
 
 
-def wrap_with_col(width: Union[int, bool, None], x: ht.TagChild) -> ht.TagChild:
-    if width:
-        if width is True:
-            return tags.div(x, class_="col")
-        else:
-            return tags.div(x, class_=f"col col-sm-{width}")
+def wrap_with_col(width: Optional[int], x: ht.TagChild) -> ht.Tag:
+    return tags.div(x, class_=col_classes(width))
+
+
+def col_classes(width: Optional[int]) -> str:
+    if width is not None:
+        return f"col col-sm-{width}"
     else:
-        return x
+        return "col"
 
 
 # May be ht.TagChild or Optional[ht.TagChild]

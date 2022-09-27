@@ -1,5 +1,6 @@
 from pathlib import Path
-from shiny import Inputs, Outputs, Session, App, render, ui
+from random import random
+from shiny import Inputs, Outputs, Session, App, render, ui, reactive
 import shinydashboard as sdb
 import htmltools as ht
 
@@ -54,12 +55,12 @@ app_ui = sdb.page(
                     "3",
                 ),
             ),
-            sdb.sidebar_menu_link("Joe", "http://www.joecheng.com"),
-            sdb.sidebar_menu_link("Noah", "http://www.noahcheng.com"),
+            sdb.sidebar_menu_link("Joe", href="http://www.joecheng.com"),
+            sdb.sidebar_menu_link("Noah", href="http://www.noahcheng.com"),
             sdb.sidebar_submenu(
                 "Pets",
                 sdb.sidebar_menu_link(
-                    "Otto", "javascript:window.alert('Not implemented');"
+                    "Otto", href="javascript:window.alert('Not implemented');"
                 ),
             ),
         ),
@@ -71,12 +72,9 @@ app_ui = sdb.page(
                 "Drummers drumming",
                 color="primary",
                 gradient=True,
-                width=True,
                 href="https://posit.co/",
             ),
-            sdb.value_box(
-                "11", "Pipers piping", color="success", gradient=True, width=True
-            ),
+            sdb.output_value_box("pipers"),
         ),
         ui.row(
             sdb.info_box(
@@ -84,35 +82,26 @@ app_ui = sdb.page(
                 "10",
                 subtitle="(That's a lot)",
                 color="info",
-                width=True,
             ),
             sdb.info_box(
                 "Ladies dancing",
                 "9",
                 subtitle="(Also a lot)",
                 color="danger",
-                width=True,
                 fill=True,
             ),
-            sdb.info_box(
-                "Maids a-milking",
-                "8",
-                color="warning",
-                gradient=True,
-                fill=True,
-                width=True,
-                href="https://posit.co/",
-            ),
+            sdb.output_info_box("maids"),
         ),
         ui.row(
             sdb.card(
-                width=True,
                 closeable=True,
                 children=["This is cool I guess"],
             ),
             sdb.card(
-                ht.TagList(ht.tags.i(class_="fa fas fa-search me-1"), "Hello"),
-                width=True,
+                ht.TagList(
+                    ht.tags.i(class_="fa fas fa-search me-1"),
+                    "Hello",
+                ),
                 collapsed=False,
                 maximizable=True,
                 closeable=True,
@@ -127,6 +116,30 @@ def server(input: Inputs, output: Outputs, session: Session):
     @render.text
     def txt():
         return f"n*2 is {input.n() * 2}"
+
+    @output
+    @sdb.render_value_box
+    def pipers():
+        reactive.invalidate_later(1)
+        return sdb.value_box(
+            "%1.3f" % (random() * 11),
+            "Pipers piping",
+            color="success",
+            gradient=True,
+        )
+
+    @output
+    @sdb.render_info_box
+    async def maids():
+        reactive.invalidate_later(1)
+        return sdb.info_box(
+            "Maids a-milking",
+            "%1.1f" % (random() * 8),
+            color="warning",
+            gradient=True,
+            fill=True,
+            href="https://posit.co/",
+        )
 
 
 app_dir = Path(__file__).parent.resolve()

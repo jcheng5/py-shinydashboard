@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional
 import htmltools as ht
 from htmltools import tags
 
@@ -9,7 +9,7 @@ def card(
     title: Optional[ht.TagChild] = None,
     *args: ht.TagChild,
     color: str = "light",
-    width: Optional[Union[int, bool]] = None,
+    width: Optional[int] = None,
     collapsed: Optional[bool] = None,
     closeable: bool = False,
     maximizable: bool = False,

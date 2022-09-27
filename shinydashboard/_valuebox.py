@@ -1,9 +1,11 @@
-from typing import Optional, Union
-
+from inspect import iscoroutinefunction
+from typing import Awaitable, Callable, Optional, Union
+import functools
 import htmltools as ht
 from htmltools import tags
+from shiny import render, ui
 
-from ._utils import bg_classes, join, wrap_with_col, wrap_with_tag
+from ._utils import bg_classes, col_classes, join, wrap_with_col, wrap_with_tag
 
 
 def value_box(
@@ -12,12 +14,12 @@ def value_box(
     *,
     icon: Optional[ht.TagChild] = None,
     color: str = "light",
-    width: Optional[Union[int, bool]] = None,
+    width: Optional[int] = None,
     href: Optional[str] = None,
     footer: Optional[ht.TagChild] = None,
     gradient: bool = False,
     class_: Optional[str] = None,
-) -> ht.TagChild:
+) -> ht.Tag:
     subtitle = wrap_with_tag(subtitle, tags.p)
 
     if icon is not None:
@@ -56,6 +58,20 @@ def value_box(
     return wrap_with_col(width, box)
 
 
+def output_value_box(id: str, width: Optional[int] = None) -> ht.Tag:
+    return ui.output_ui(
+        id,
+        container=ht.div,
+        class_="value-box-output " + col_classes(width),
+    )
+
+
+def render_value_box(
+    fn: Callable[[], Union[Optional[ht.Tag], Awaitable[Optional[ht.Tag]]]]
+):
+    return render_children(fn)
+
+
 def info_box(
     title: ht.TagChild,
     value: Optional[ht.TagChild] = None,
@@ -63,12 +79,12 @@ def info_box(
     subtitle: Optional[ht.TagChild] = None,
     icon: ht.TagChild = tags.i(class_="fas fa-thumbs-up"),
     color: str = "secondary",
-    width: Optional[Union[int, bool]] = None,
+    width: Optional[int] = None,
     href: Optional[str] = None,
     fill: bool = False,
     gradient: bool = False,
     class_: Optional[str] = None,
-) -> ht.TagChild:
+) -> ht.Tag:
     subtitle = wrap_with_tag(subtitle, tags.p)
 
     if href is None:
@@ -111,3 +127,46 @@ def info_box(
     )
 
     return wrap_with_col(width, box)
+
+
+def output_info_box(id: str, width: Optional[int] = None) -> ht.Tag:
+    return ui.output_ui(
+        id,
+        container=ht.div,
+        class_="info-box-output " + col_classes(width),
+    )
+
+
+def render_info_box(
+    fn: Callable[[], Union[Optional[ht.Tag], Awaitable[Optional[ht.Tag]]]]
+):
+    return render_children(fn)
+
+
+def render_children(
+    fn: Callable[[], Union[Optional[ht.Tag], Awaitable[Optional[ht.Tag]]]]
+):
+    if iscoroutinefunction(fn) or (
+        hasattr(fn, "__call__") and iscoroutinefunction(getattr(fn, "__call__"))
+    ):
+
+        @functools.wraps(fn)
+        async def fn_async() -> Optional[ht.TagChildArg]:
+            res: Optional[ht.Tag] = await fn()  # type: ignore
+            if res is None:
+                return res
+            else:
+                return res.children
+
+        return render.ui(fn_async)
+    else:
+
+        @functools.wraps(fn)
+        def fn_sync() -> Optional[ht.TagList]:
+            res: Optional[ht.Tag] = fn()  # type: ignore
+            if res is None:
+                return res
+            else:
+                return res.children
+
+        return render.ui(fn_sync)
