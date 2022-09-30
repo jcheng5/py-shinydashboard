@@ -1,5 +1,6 @@
 from typing import List
 from htmltools import HTMLDependency
+from . import __version__
 
 
 def deps_adminlte() -> List[HTMLDependency]:
@@ -14,4 +15,18 @@ def deps_adminlte() -> List[HTMLDependency]:
             script={"src": "js/adminlte.min.js"},
             stylesheet={"href": "css/adminlte.min.css"},
         ),
+    ]
+
+
+def deps_shinydashboard() -> List[HTMLDependency]:
+    return [
+        HTMLDependency(
+            "shinydashboard",
+            __version__,
+            source={
+                "package": "shinydashboard",
+                "subdir": "js",
+            },
+            script={"src": "shinydashboard.js"},
+        )
     ]

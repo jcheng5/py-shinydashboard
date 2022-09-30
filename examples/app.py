@@ -3,6 +3,8 @@ from random import random
 from shiny import Inputs, Outputs, Session, App, render, ui, reactive
 import shinydashboard as sdb
 import htmltools as ht
+import matplotlib.pyplot as plt
+import numpy as np
 
 # TODO: I don't think the stretched-links are accessible if they don't have a visible
 # element
@@ -47,6 +49,8 @@ app_ui = sdb.page(
     ),
     sidebar=sdb.sidebar(
         sdb.brand("Hello World"),
+        sdb.sidebar_menu_tab("First tab", tab_name="tab1"),
+        sdb.sidebar_menu_tab("Second tab", tab_name="tab2"),
         sdb.sidebar_submenu(
             ht.TagList(
                 "The Chengs",
@@ -66,46 +70,53 @@ app_ui = sdb.page(
         ),
     ),
     body=sdb.body(
-        ui.row(
-            sdb.value_box(
-                "12",
-                "Drummers drumming",
-                color="primary",
-                gradient=True,
-                href="https://posit.co/",
-            ),
-            sdb.output_value_box("pipers"),
-        ),
-        ui.row(
-            sdb.info_box(
-                "Lords a-leaping",
-                "10",
-                subtitle="(That's a lot)",
-                color="info",
-            ),
-            sdb.info_box(
-                "Ladies dancing",
-                "9",
-                subtitle="(Also a lot)",
-                color="danger",
-                fill=True,
-            ),
-            sdb.output_info_box("maids"),
-        ),
-        ui.row(
-            sdb.card(
-                closeable=True,
-                children=["This is cool I guess"],
-            ),
-            sdb.card(
-                ht.TagList(
-                    ht.tags.i(class_="fa fas fa-search me-1"),
-                    "Hello",
+        sdb.navset(
+            sdb.nav_content(
+                "tab1",
+                ui.row(
+                    sdb.value_box(
+                        "12",
+                        "Drummers drumming",
+                        color="primary",
+                        gradient=True,
+                        href="https://posit.co/",
+                    ),
+                    sdb.output_value_box("pipers"),
                 ),
-                collapsed=False,
-                maximizable=True,
-                closeable=True,
+                ui.row(
+                    sdb.info_box(
+                        "Lords a-leaping",
+                        "10",
+                        subtitle="(That's a lot)",
+                        color="info",
+                    ),
+                    sdb.info_box(
+                        "Ladies dancing",
+                        "9",
+                        subtitle="(Also a lot)",
+                        color="danger",
+                        fill=True,
+                    ),
+                    sdb.output_info_box("maids"),
+                ),
+                ui.row(
+                    sdb.card(
+                        "A simple plot",
+                        ui.output_plot("plot"),
+                        closeable=True,
+                    ),
+                    sdb.card(
+                        ht.TagList(
+                            ht.tags.i(class_="fa fas fa-search me-1"),
+                            "Hello",
+                        ),
+                        collapsed=False,
+                        maximizable=True,
+                        closeable=True,
+                    ),
+                ),
             ),
+            sdb.nav_content("tab2", "Hello from tab 2"),
         ),
     ),
 )
@@ -140,6 +151,37 @@ def server(input: Inputs, output: Outputs, session: Session):
             fill=True,
             href="https://posit.co/",
         )
+
+    @output
+    @render.plot
+    def plot():
+        N = 5
+        menMeans = (20, 35, 30, 35, -27)
+        womenMeans = (25, 32, 34, 20, -25)
+        menStd = (2, 3, 4, 1, 2)
+        womenStd = (3, 5, 2, 3, 3)
+        ind = np.arange(N)  # the x locations for the groups
+        width = 0.35  # the width of the bars: can also be len(x) sequence
+
+        fig, ax = plt.subplots()
+
+        p1 = ax.bar(ind, menMeans, width, yerr=menStd, label="Men")
+        p2 = ax.bar(
+            ind, womenMeans, width, bottom=menMeans, yerr=womenStd, label="Women"
+        )
+
+        ax.axhline(0, color="grey", linewidth=0.8)
+        ax.set_ylabel("Scores")
+        ax.set_title("Scores by group and gender")
+        ax.set_xticks(ind, labels=["G1", "G2", "G3", "G4", "G5"])
+        ax.legend()
+
+        # Label with label_type 'center' instead of the default 'edge'
+        ax.bar_label(p1, label_type="center")
+        ax.bar_label(p2, label_type="center")
+        ax.bar_label(p2)
+
+        return fig
 
 
 app_dir = Path(__file__).parent.resolve()

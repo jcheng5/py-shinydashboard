@@ -3,7 +3,7 @@ from typing import List, Optional
 import htmltools as ht
 from htmltools import tags
 
-from ._htmldeps import deps_adminlte
+from ._htmldeps import deps_adminlte, deps_shinydashboard
 
 
 # TODO: Use all arguments
@@ -40,6 +40,7 @@ def _head(*, title: ht.TagChildArg = None) -> ht.Tag:
         tags.meta({"http-equiv": "x-ua-compatible", "content": "ie=edge"}),
         tags.title(title),
         deps_adminlte(),
+        deps_shinydashboard(),
         tags.link(
             rel="stylesheet",
             href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css",

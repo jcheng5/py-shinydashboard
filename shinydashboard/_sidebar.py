@@ -1,7 +1,6 @@
 from typing import Optional, Union
 import htmltools as ht
 from htmltools import tags
-
 from ._utils import wrap_with_tag
 
 
@@ -36,6 +35,38 @@ def brand(
     )
 
 
+def sidebar_menu_tab(
+    title: ht.TagChild,
+    tab_name: str,
+    *,
+    icon: ht.TagChild = tags.i(
+        {"class": "nav-icon far fa-circle"},
+    ),
+) -> ht.Tag:
+    # id of the pane we're controlling
+    content_id = f"shinydash-tab-{tab_name}"
+    # id of the current element
+    id = f"{content_id}-tab"
+
+    return tags.li(
+        {"class": "nav-item", "role": "presentation"},
+        tags.a(
+            {
+                "class": "nav-link",
+                "role": "tab",
+                "id": id,
+                "href": "#",
+                "data-bs-toggle": "tab",
+                "data-bs-target": f"#{content_id}",
+            },
+            icon,
+            tags.p(
+                title,
+            ),
+        ),
+    )
+
+
 def sidebar_menu_link(
     title: ht.TagChild,
     href: str,
@@ -44,18 +75,42 @@ def sidebar_menu_link(
         {"class": "nav-icon far fa-circle"},
     ),
 ) -> ht.Tag:
+
     return tags.li(
-        {"class": "nav-item"},
+        {"class": "nav-item", "role": "presentation"},
         tags.a(
-            {
-                "href": href,
-                "class": "nav-link",
-            },
+            {"class": "nav-link", "href": href},
             icon,
             tags.p(
                 title,
             ),
         ),
+    )
+
+
+def nav_content(tab_name: str, *args: ht.TagChildArg, **kwargs: ht.TagAttrArg):
+    id = f"shinydash-tab-{tab_name}"
+    return ht.div(
+        {
+            "id": id,
+            "class": "tab-pane",
+            "role": "tabpanel",
+            "aria-labelledby": id + "-tab",
+        },
+        *args,
+        **kwargs,
+    )
+
+
+def navset(*tabs: ht.TagChildArg, **kwargs: ht.TagAttrArg):
+    return ht.div(
+        {
+            "id": "shinydash-tab",
+            "data-tabsetid": "shinydash-tab",
+            "class": "tab-content",
+        },
+        *tabs,
+        **kwargs,
     )
 
 

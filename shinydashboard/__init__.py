@@ -6,7 +6,15 @@ from ._body import body
 from ._card import card
 from ._dropdown import MenuType, item_message, item_notification, menu_dropdown
 from ._layout import header, header_link, page
-from ._sidebar import brand, sidebar, sidebar_menu_link, sidebar_submenu
+from ._sidebar import (
+    brand,
+    nav_content,
+    navset,
+    sidebar,
+    sidebar_menu_link,
+    sidebar_menu_tab,
+    sidebar_submenu,
+)
 from ._valuebox import (
     info_box,
     output_info_box,
@@ -27,12 +35,15 @@ __all__ = (
     "item_notification",
     "menu_dropdown",
     "MenuType",
+    "navset",
+    "nav_content",
     "output_info_box",
     "output_value_box",
     "page",
     "render_info_box",
     "render_value_box",
     "sidebar_menu_link",
+    "sidebar_menu_tab",
     "sidebar_submenu",
     "sidebar",
     "value_box",
