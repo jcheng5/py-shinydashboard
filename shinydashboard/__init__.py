@@ -4,7 +4,13 @@ __version__ = "0.0.0.9000"
 
 from ._body import body
 from ._card import card
-from ._dropdown import MenuType, item_message, item_notification, menu_dropdown
+from ._dropdown import (
+    item_message,
+    item_notification,
+    menu_dropdown,
+    output_menu_dropdown,
+    render_menu_dropdown,
+)
 from ._layout import header, header_link, page
 from ._sidebar import (
     brand,
@@ -34,13 +40,14 @@ __all__ = (
     "item_message",
     "item_notification",
     "menu_dropdown",
-    "MenuType",
     "navset",
     "nav_content",
     "output_info_box",
+    "output_menu_dropdown",
     "output_value_box",
     "page",
     "render_info_box",
+    "render_menu_dropdown",
     "render_value_box",
     "sidebar_menu_link",
     "sidebar_menu_tab",

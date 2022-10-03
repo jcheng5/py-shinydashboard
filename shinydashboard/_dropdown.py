@@ -1,33 +1,23 @@
-from enum import Enum
-from typing import List, Optional
+from typing import List, Literal, Optional, Union
 
 import htmltools as ht
+from faicons import icon_svg
 from htmltools import tags
+from shiny import render
 
 from ._utils import insert_dividers
 
 
-class MenuType(Enum):
-    Messages = 1
-    Notifications = 2
-    # Tasks = 3
-
-
 def menu_dropdown(
-    type: MenuType,
+    icon: ht.TagChild,
     *args: ht.TagChild,
+    badge_value: Optional[Union[int, Literal["auto"]]] = "auto",
     badge_status: Optional[str] = "primary",
-    icon: Optional[ht.TagChild] = None,
     header: Optional[ht.TagChild] = None,
 ) -> ht.TagChild:
-    if icon is not None:
-        pass
-    elif type == MenuType.Notifications:
-        icon = tags.i({"class": "far fa-bell"})
-    elif type == MenuType.Messages:
-        icon = tags.i({"class": "far fa-comments"})
-    # elif type == MenuType.Tasks:
-    #     icon = tags.i({"class": "far fa-list-check"})
+
+    if badge_value == "auto":
+        badge_value = len(args)
 
     children: List[ht.TagChild] = []
     if header is not None:
@@ -50,9 +40,13 @@ def menu_dropdown(
         tags.a(
             {"class": "nav-link", "data-bs-toggle": "dropdown", "href": "#"},
             icon,
-            tags.span(
-                {"class": f"navbar-badge badge bg-{badge_status}"},
-                str(len(args)),
+            (
+                tags.span(
+                    {"class": f"navbar-badge badge bg-{badge_status}"},
+                    str(badge_value),
+                )
+                if badge_value is not None and badge_status is not None
+                else None
             ),
         ),
         tags.div(
@@ -61,6 +55,13 @@ def menu_dropdown(
     )
 
     return menu
+
+
+def output_menu_dropdown(id: str) -> ht.Tag:
+    return tags.li(id=id, class_="shinydashboard-menu-output")
+
+
+render_menu_dropdown = render.ui
 
 
 def item_message(
@@ -114,8 +115,8 @@ def item_message(
 def item_notification(
     message: ht.TagChild,
     *,
-    icon: Optional[ht.TagChild] = tags.i(
-        {"class": "fas fa-exclamation-circle fa-fw me-2"},
+    icon: Optional[ht.TagChild] = icon_svg(
+        "circle-exclamation", fill="var(--bs-secondary)"
     ),
     time: Optional[ht.TagChild] = None,
     href: Optional[str] = None,

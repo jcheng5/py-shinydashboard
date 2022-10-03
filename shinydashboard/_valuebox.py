@@ -1,7 +1,9 @@
+import functools
 from inspect import iscoroutinefunction
 from typing import Awaitable, Callable, Optional, Union
-import functools
+
 import htmltools as ht
+from faicons import icon_svg
 from htmltools import tags
 from shiny import render, ui
 
@@ -77,7 +79,8 @@ def info_box(
     value: Optional[ht.TagChild] = None,
     *,
     subtitle: Optional[ht.TagChild] = None,
-    icon: ht.TagChild = tags.i(class_="fas fa-thumbs-up"),
+    # icon: ht.TagChild = tags.i(class_="fas fa-thumbs-up"),
+    icon: ht.TagChild = icon_svg("thumbs-up", margin_left=None, margin_right=None),
     color: str = "secondary",
     width: Optional[int] = None,
     href: Optional[str] = None,

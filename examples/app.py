@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 from random import random
 from shiny import Inputs, Outputs, Session, App, render, ui, reactive
@@ -5,6 +6,7 @@ import shinydashboard as sdb
 import htmltools as ht
 import matplotlib.pyplot as plt
 import numpy as np
+from faicons import icon_svg
 
 # TODO: I don't think the stretched-links are accessible if they don't have a visible
 # element
@@ -13,29 +15,9 @@ app_ui = sdb.page(
     header=sdb.header(
         children=[sdb.header_link("https://posit.co", "Posit")],
         children_right=[
+            sdb.output_menu_dropdown("comments"),
             sdb.menu_dropdown(
-                sdb.MenuType.Messages,
-                sdb.item_message(
-                    "Joe Cheng",
-                    "Hello, world!",
-                    icon=ht.tags.i(class_="fs-2 text-info fa fas fa-info-circle"),
-                    time="4 minutes ago",
-                ),
-                sdb.item_message(
-                    "Winston Chang",
-                    ht.TagList(
-                        "I need a code review ", ht.strong("right now"), " please!"
-                    ),
-                    icon=ht.tags.i(
-                        class_="fs-2 text-danger fa fas fa-exclamation-circle"
-                    ),
-                    time="4 minutes ago",
-                    href="https://github.com/",
-                ),
-                header="Recent messages",
-            ),
-            sdb.menu_dropdown(
-                sdb.MenuType.Notifications,
+                icon_svg("bell"),
                 sdb.item_notification(
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                     time="An hour ago",
@@ -107,7 +89,7 @@ app_ui = sdb.page(
                     ),
                     sdb.card(
                         ht.TagList(
-                            ht.tags.i(class_="fa fas fa-search me-1"),
+                            icon_svg("magnifying-glass"),
                             "Hello",
                         ),
                         collapsed=False,
@@ -182,6 +164,29 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax.bar_label(p2)
 
         return fig
+
+    @output
+    @sdb.render_menu_dropdown
+    def comments():
+        return sdb.menu_dropdown(
+            icon_svg("comments"),
+            sdb.item_message(
+                "Joe Cheng",
+                "Hello, world!",
+                icon=icon_svg("circle-info", height="2em", fill="var(--bs-info)"),
+                time="2 minutes ago",
+            ),
+            sdb.item_message(
+                "Winston Chang",
+                ht.TagList("I need a code review ", ht.strong("right now"), " please!"),
+                icon=icon_svg(
+                    "circle-exclamation", height="2em", fill="var(--bs-danger)"
+                ),
+                time="4 minutes ago",
+                href="https://github.com/",
+            ),
+            header="Recent messages",
+        )
 
 
 app_dir = Path(__file__).parent.resolve()

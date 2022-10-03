@@ -5,7 +5,7 @@
 // retain the "active" class, so they will both be highlighted. This happens
 // because they're not designed to be used together for tab panels. This
 // code ensures that only one item will have the "active" class.
-var deactivateOtherTabs = function () {
+export function deactivateOtherTabs() {
   // Find all tab links under sidebar-menu even if they don't have a
   // tabName (which is why the second selector is necessary)
   var $tablinks = $(
@@ -22,7 +22,7 @@ var deactivateOtherTabs = function () {
     inputBinding.setValue($obj, $(this).attr("data-value"));
     $obj.trigger("change");
   }
-};
+}
 
 $(document).on(
   "shown.bs.tab",
@@ -33,7 +33,7 @@ $(document).on(
 // When document is ready, if there is a sidebar menu with no activated tabs,
 // activate the one specified by `data-start-selected`, or if that's not
 // present, the first one.
-var ensureActivatedTab = function () {
+export function ensureActivatedTab() {
   var $tablinks = $(".nav-sidebar a[data-bs-toggle='tab']");
 
   // If there's a `data-start-selected` attribute and we can find a tab with
@@ -57,8 +57,6 @@ var ensureActivatedTab = function () {
       $startTab.attr("data-value")
     );
   }
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => ensureActivatedTab());
-
-export {};
