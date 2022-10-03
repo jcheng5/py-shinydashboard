@@ -1,0 +1,47 @@
+name: Javascript Tests
+on: pull_request
+
+concurrency:
+  group: ci-tests-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./srcts
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "18.x"
+      - uses: actions/cache@v2
+        with:
+          path: "inst/ui-editor-react/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('inst/ui-editor-react/yarn.lock') }}
+      - name: Install dependencies
+        run: yarn
+  build:
+    needs: setup
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./srcts
+    steps:
+      - name: Build JavaScript
+        run: |
+          yarn build
+  check-if-current-build:
+    needs: build
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./srcts
+    steps:
+      - name: Check if build is current
+        run: |
+          # If this fails then the build is stale compared to source
+          git diff --exit-code -- build/
