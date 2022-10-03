@@ -45,16 +45,16 @@
   dependencies:
     "@types/sizzle" "*"
 
-"@types/jquery@3.5.5", "@types/jquery@patch:@types/jquery@3.5.5#./srcts/patch/types-jquery.patch":
+"@types/jquery@patch:@types/jquery@3.5.5#./srcts/patch/types-jquery.patch":
   version "3.5.5"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.5.tgz#2c63f47c9c8d96693d272f5453602afd8338c903"
   integrity sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==
   dependencies:
     "@types/sizzle" "*"
 
-"@types/rstudio-shiny@https://github.com/rstudio/shiny#v1.7.2":
-  version "1.7.2"
-  resolved "https://github.com/rstudio/shiny#b39ffafea94e818ae73adf25209e13b7cc28dbdb"
+"@types/rstudio-shiny@https://github.com/rstudio/shiny#51da80d38175f97a8d3799de1e541d6ab43914ae":
+  version "1.7.2-alpha.9000"
+  resolved "https://github.com/rstudio/shiny#51da80d38175f97a8d3799de1e541d6ab43914ae"
   dependencies:
     "@types/bootstrap" "3.4.0"
     "@types/bootstrap-datepicker" "0.0.14"
@@ -206,7 +206,7 @@ esbuild@^0.15.9:
     esbuild-windows-64 "0.15.10"
     esbuild-windows-arm64 "0.15.10"
 
-typescript@4.1.5:
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.5.tgz#123a3b214aaff3be32926f0d8f1f6e704eb89a72"
-  integrity sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
+typescript@^4.8.4:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
+  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
