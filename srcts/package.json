@@ -4,7 +4,7 @@
     "build": "tsc -noEmit && esbuild --bundle index.ts --outfile=../shinydashboard/js/shinydashboard.js"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.14",
+    "@types/jquery": "3.5.5",
     "@types/rstudio-shiny": "https://github.com/rstudio/shiny#v1.7.2",
     "@typescript/lib-dom": "npm:@types/web",
     "esbuild": "^0.15.9",

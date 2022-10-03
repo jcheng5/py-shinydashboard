@@ -18,8 +18,8 @@ jobs:
           node-version: "18.x"
       - uses: actions/cache@v2
         with:
-          path: "inst/ui-editor-react/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('inst/ui-editor-react/yarn.lock') }}
+          path: "srcts/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('srcts/yarn.lock') }}
       - name: Install dependencies
         run: yarn
   build:
