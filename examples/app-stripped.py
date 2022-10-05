@@ -28,76 +28,48 @@ app_ui = sdb.page(
             ),
         ],
     ),
-    sidebar=sdb.sidebar(
-        sdb.brand("Hello World"),
-        sdb.sidebar_menu_tab("First tab", tab_name="tab1"),
-        sdb.sidebar_menu_tab("Second tab", tab_name="tab2"),
-        sdb.sidebar_submenu(
-            ht.TagList(
-                "The Chengs",
-                ht.tags.span(
-                    {"class": "badge bg-info float-end me-3"},
-                    "3",
-                ),
-            ),
-            sdb.sidebar_menu_link("Joe", href="http://www.joecheng.com"),
-            sdb.sidebar_menu_link("Noah", href="http://www.noahcheng.com"),
-            sdb.sidebar_submenu(
-                "Pets",
-                sdb.sidebar_menu_link(
-                    "Otto", href="javascript:window.alert('Not implemented');"
-                ),
-            ),
-        ),
-    ),
     body=sdb.body(
-        sdb.navset(
-            sdb.nav_content(
-                "tab1",
-                ui.row(
-                    sdb.value_box(
-                        "12",
-                        "Drummers drumming",
-                        color="primary",
-                        gradient=True,
-                        href="https://posit.co/",
-                    ),
-                    sdb.output_value_box("pipers"),
-                ),
-                ui.row(
-                    sdb.info_box(
-                        "Lords a-leaping",
-                        "10",
-                        subtitle="(That's a lot)",
-                        color="info",
-                    ),
-                    sdb.info_box(
-                        "Ladies dancing",
-                        "9",
-                        subtitle="(Also a lot)",
-                        color="danger",
-                        fill=True,
-                    ),
-                    sdb.output_info_box("maids"),
-                ),
-                ui.row(
-                    sdb.card(
-                        "A simple plot",
-                        ui.output_plot("plot"),
-                        closeable=True,
-                    ),
-                    sdb.card(
-                        ht.TagList(
-                            icon_svg("magnifying-glass"),
-                            "Hello",
-                        ),
-                        collapsed=False,
-                        maximizable=True,
-                        closeable=True,
-                    ),
-                ),
+        ui.row(
+            sdb.value_box(
+                "12",
+                "Drummers drumming",
+                color="primary",
+                gradient=True,
+                href="https://posit.co/",
             ),
-            sdb.nav_content("tab2", "Hello from tab 2"),
+            sdb.output_value_box("pipers"),
+        ),
+        ui.row(
+            sdb.info_box(
+                "Lords a-leaping",
+                "10",
+                subtitle="(That's a lot)",
+                color="info",
+            ),
+            sdb.info_box(
+                "Ladies dancing",
+                "9",
+                subtitle="(Also a lot)",
+                color="danger",
+                fill=True,
+            ),
+            sdb.output_info_box("maids"),
+        ),
+        ui.row(
+            sdb.card(
+                "A simple plot",
+                ui.output_plot("plot"),
+                closeable=True,
+            ),
+            sdb.card(
+                ht.TagList(
+                    icon_svg("magnifying-glass"),
+                    "Hello",
+                ),
+                collapsed=False,
+                maximizable=True,
+                closeable=True,
+            ),
         ),
     ),
 )

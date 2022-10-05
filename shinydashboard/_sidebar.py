@@ -3,6 +3,8 @@ import htmltools as ht
 from htmltools import tags
 from ._utils import wrap_with_tag
 
+from htmltools._core import Tag  # type: ignore
+
 
 def brand(
     title: ht.TagChild,

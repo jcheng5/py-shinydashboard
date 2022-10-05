@@ -2,29 +2,57 @@ from typing import List, Optional
 
 import htmltools as ht
 from htmltools import tags
+from htmltools._core import Tag, Tagifiable, TagList, TagChildArg  # type: ignore
 
 from ._htmldeps import deps_adminlte, deps_shinydashboard
 
 
 # TODO: Use all arguments
 def page(
-    header: ht.TagChildArg = None,
-    sidebar: ht.TagChildArg = None,
-    body: ht.TagChildArg = None,
+    header: Optional[ht.Tag] = None,
+    sidebar: Optional[ht.Tag] = None,
+    body: Optional[ht.Tag] = None,
     *,
-    controlbar: ht.TagChildArg = None,
-    footer: ht.TagChildArg = None,
     title: ht.TagChildArg = None,
     lang: Optional[str] = None,
 ) -> ht.Tag:
+    """Create a shinydashboard page, suitable for use as the UI of aa Shiny app's ``app_ui``.
+
+    Parameters
+    ----------
+
+    header
+        The top navigation bar, as returned by :func:`header`.
+    sidebar
+        The side navigation bar, as returned by :func:`sidebar`.
+    body
+        The main content area of the page, as returned by :func:`body`.
+    title
+        The contents of the ``<title>`` tag, which is used by the browser to label browser tabs and bookmarks.
+    lang
+        The ``lang`` attribute of the ``<html>`` tag; for example, ``"en"`` for English.
+
+    Returns
+    -------
+    A :class:`Tag` object representing the HTML page.
+
+    Examples
+    --------
+    >>> import shinydashboard as sdb
+    >>> app_ui = sdb.page(
+    ...     header = sdb.header(),
+    ...     sidebar = sdb.sidebar(),
+    ...     body = sdb.body(),
+    ...     title = "Example dashboard"
+    ... )
+    """
+
     return tags.html(
         _head(title=title),
         _body(
             header=header,
             sidebar=sidebar,
             body=body,
-            controlbar=controlbar,
-            footer=footer,
         ),
         lang=lang,
     )
@@ -61,12 +89,10 @@ def _body(
     header: ht.TagChildArg = None,
     sidebar: ht.TagChildArg = None,
     body: ht.TagChildArg = None,
-    *,
-    controlbar: ht.TagChildArg = None,
-    footer: ht.TagChildArg = None,
 ) -> ht.Tag:
     return tags.body(
         {"class": "layout-fixed"},
+        {"class": "remove-sidebar"} if sidebar is None else None,
         tags.div(
             {"class": "wrapper"},
             header,

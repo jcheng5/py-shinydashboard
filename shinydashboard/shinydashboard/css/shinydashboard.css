@@ -1,0 +1,19 @@
+.remove-sidebar {
+  --lte-sidebar-width: 0;
+}
+
+.remove-sidebar .wrapper {
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    "main-header"
+    "content-wrapper"
+    "main-footer";
+  grid-template-rows: min-content 100% min-content;
+  grid-template-columns: minmax(100%, max-content);
+  grid-gap: 0;
+  align-content: stretch;
+  align-items: stretch;
+
+  min-height: 100vh;
+}

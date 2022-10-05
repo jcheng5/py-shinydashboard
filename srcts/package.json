@@ -1,7 +1,7 @@
 {
   "name": "shinydashboard",
   "scripts": {
-    "build": "tsc -noEmit && esbuild --bundle index.ts --outfile=../shinydashboard/js/shinydashboard.js"
+    "build": "tsc -noEmit && esbuild --bundle index.ts --outfile=../shinydashboard/shinydashboard/js/shinydashboard.js"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.14",

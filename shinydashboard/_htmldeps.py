@@ -25,8 +25,9 @@ def deps_shinydashboard() -> List[HTMLDependency]:
             __version__,
             source={
                 "package": "shinydashboard",
-                "subdir": "js",
+                "subdir": "shinydashboard",
             },
-            script={"src": "shinydashboard.js"},
+            script={"src": "js/shinydashboard.js"},
+            stylesheet={"href": "css/shinydashboard.css"},
         )
     ]
