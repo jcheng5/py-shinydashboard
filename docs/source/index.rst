@@ -18,7 +18,6 @@ Functions for creating the top-level shinydashboard page, and the links in the h
     :toctree: reference/
 
     page
-    brand
     header
     header_link
 
@@ -31,6 +30,7 @@ Functions for creating the sidebar menu.
     :toctree: reference/
 
     sidebar
+    brand
     sidebar_menu_tab
     sidebar_menu_link
     sidebar_submenu

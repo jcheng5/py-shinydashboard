@@ -7,7 +7,6 @@ from htmltools._core import Tag, Tagifiable, TagList, TagChildArg  # type: ignor
 from ._htmldeps import deps_adminlte, deps_shinydashboard
 
 
-# TODO: Use all arguments
 def page(
     header: Optional[ht.Tag] = None,
     sidebar: Optional[ht.Tag] = None,
@@ -16,7 +15,7 @@ def page(
     title: ht.TagChildArg = None,
     lang: Optional[str] = None,
 ) -> ht.Tag:
-    """Create a shinydashboard page, suitable for use as the UI of aa Shiny app's ``app_ui``.
+    """A shinydashboard page, for use as a Shiny app's UI.
 
     Parameters
     ----------
@@ -34,7 +33,7 @@ def page(
 
     Returns
     -------
-    A :class:`Tag` object representing the HTML page.
+        A :class:`Tag` object representing the HTML page.
 
     Examples
     --------
@@ -105,10 +104,26 @@ def _body(
 
 
 def header(
-    *args: ht.TagChild,
     children: Optional[List[ht.TagChildArg]] = None,
     children_right: Optional[List[ht.TagChildArg]] = None,
 ) -> ht.Tag:
+    """A header, for use in :func:`page`.
+
+    The header for a dashboard, suitable for use as the ``header`` argument in :func:`page`.
+
+    Note that shinydashboard headers do not include the logo or tab navigation; instead, those are in the sidebar.
+
+    Parameters
+    ----------
+    children
+        A list of items to display on the left side of the header, like :func:`header_link`.
+    children_right
+        A list of items to display on the right side of the header, like :func:`menu_dropdown`.
+
+    Returns
+    -------
+        A :class:`Tag` object.
+    """
     # Navbar
     return tags.nav(
         {"class": "main-header navbar navbar-expand navbar-light"},
@@ -129,7 +144,6 @@ def header(
                         tags.i(class_="fas fa-bars"),
                     ),
                 ),
-                *args,
                 children=children,
             ),
             # Drop-down menus
@@ -142,362 +156,20 @@ def header(
 
 
 def header_link(href: str, label: ht.TagChild) -> ht.Tag:
+    """A link, for use in :func:`header`.
+
+    Parameters
+    ----------
+    href
+        A URL to link to.
+    label
+        A string or htmltools HTML to use as a label.
+
+    Returns
+    -------
+        A :class:`Tag` object.
+    """
     return tags.li(
         {"class": "nav-item d-none d-md-block"},
         tags.a({"href": href, "class": "nav-link"}, label),
-    )
-
-
-def dummy2():
-    return ht.TagList(
-        # Navbar Search
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {
-                    "class": "nav-link",
-                    "data-widget": "navbar-search",
-                    "href": "#",
-                    "role": "button",
-                },
-                tags.i({"class": "fas fa-search"}),
-            ),
-        ),
-        # Messages Dropdown Menu
-        tags.li(
-            {"class": "nav-item dropdown"},
-            tags.a(
-                {"class": "nav-link", "data-bs-toggle": "dropdown", "href": "#"},
-                tags.i(
-                    {"class": "far fa-comments"},
-                ),
-                tags.span(
-                    {"class": "navbar-badge badge bg-danger"},
-                    "3",
-                ),
-            ),
-            tags.div(
-                {"class": "dropdown-menu dropdown-menu-lg dropdown-menu-end"},
-                tags.a(
-                    {"href": "#", "class": "dropdown-item"},
-                    # Message Start
-                    tags.div(
-                        {"class": "d-flex"},
-                        tags.div(
-                            {"class": "flex-shrink-0"},
-                            tags.img(
-                                {
-                                    "src": "./assets/img/user1-128x128.jpg",
-                                    "alt": "User Avatar",
-                                    "class": "img-size-50 img-circle me-3",
-                                }
-                            ),
-                        ),
-                        tags.div(
-                            {"class": "flex-grow-1"},
-                            tags.h3(
-                                {"class": "dropdown-item-title"},
-                                "Brad Diesel",
-                                tags.span(
-                                    {"class": "float-end fs-7 text-danger"},
-                                    tags.i(
-                                        {"class": "fas fa-star"},
-                                    ),
-                                ),
-                            ),
-                            tags.p(
-                                {"class": "fs-7"},
-                                "Call me whenever you can...",
-                            ),
-                            tags.p(
-                                {"class": "fs-7 text-muted"},
-                                tags.i(
-                                    {"class": "far fa-clock me-1"},
-                                ),
-                                "4 Hours Ago",
-                            ),
-                        ),
-                    ),
-                    # Message End
-                ),
-                tags.div(
-                    {"class": "dropdown-divider"},
-                ),
-                tags.a(
-                    {"href": "#", "class": "dropdown-item"},
-                    # Message Start
-                    tags.div(
-                        {"class": "d-flex"},
-                        tags.div(
-                            {"class": "flex-shrink-0"},
-                            tags.img(
-                                {
-                                    "src": "./assets/img/user8-128x128.jpg",
-                                    "alt": "User Avatar",
-                                    "class": "img-size-50 img-circle me-3",
-                                }
-                            ),
-                        ),
-                        tags.div(
-                            {"class": "flex-grow-1"},
-                            tags.h3(
-                                {"class": "dropdown-item-title"},
-                                "John Pierce",
-                                tags.span(
-                                    {"class": "float-end fs-7 text-muted"},
-                                    tags.i(
-                                        {"class": "fas fa-star"},
-                                    ),
-                                ),
-                            ),
-                            tags.p(
-                                {"class": "fs-7"},
-                                "I got your message bro",
-                            ),
-                            tags.p(
-                                {"class": "fs-7 text-muted"},
-                                tags.i(
-                                    {"class": "far fa-clock me-1"},
-                                ),
-                                "4 Hours Ago",
-                            ),
-                        ),
-                    ),
-                    # Message End
-                ),
-                tags.div(
-                    {"class": "dropdown-divider"},
-                ),
-                tags.a(
-                    {"href": "#", "class": "dropdown-item"},
-                    # Message Start
-                    tags.div(
-                        {"class": "d-flex"},
-                        tags.div(
-                            {"class": "flex-shrink-0"},
-                            tags.img(
-                                {
-                                    "src": "./assets/img/user3-128x128.jpg",
-                                    "alt": "User Avatar",
-                                    "class": "img-size-50 img-circle me-3",
-                                },
-                            ),
-                        ),
-                        tags.div(
-                            {"class": "flex-grow-1"},
-                            tags.h3(
-                                {"class": "dropdown-item-title"},
-                                "Nora Silvester",
-                                tags.span(
-                                    {"class": "float-end fs-7 text-warning"},
-                                    tags.i(
-                                        {"class": "fas fa-star"},
-                                    ),
-                                ),
-                            ),
-                            tags.p(
-                                {"class": "fs-7"},
-                                "The subject goes here",
-                            ),
-                            tags.p(
-                                {"class": "fs-7 text-muted"},
-                                tags.i(
-                                    {"class": "far fa-clock me-1"},
-                                ),
-                                "4 Hours Ago",
-                            ),
-                        ),
-                        # Message End
-                    ),
-                ),
-                tags.div(
-                    {"class": "dropdown-divider"},
-                ),
-                tags.a(
-                    {"href": "#", "class": "dropdown-item dropdown-footer"},
-                    "See All Messages",
-                ),
-            ),
-            # Notifications Dropdown Menu
-            tags.li(
-                {"class": "nav-item dropdown"},
-                tags.a(
-                    {"class": "nav-link", "data-bs-toggle": "dropdown", "href": "#"},
-                    tags.i(
-                        {"class": "far fa-bell"},
-                    ),
-                    tags.span(
-                        {"class": "navbar-badge badge bg-warning"},
-                        "15",
-                    ),
-                ),
-                tags.div(
-                    {"class": "dropdown-menu dropdown-menu-lg dropdown-menu-end"},
-                    tags.span(
-                        {"class": "dropdown-item dropdown-header"},
-                        "15 Notifications",
-                    ),
-                    tags.div(
-                        {"class": "dropdown-divider"},
-                    ),
-                    tags.a(
-                        {"href": "#", "class": "dropdown-item"},
-                        tags.i(
-                            {"class": "fas fa-envelope fa-fw me-2"},
-                        ),
-                        "4 new messages",
-                        tags.span(
-                            {"class": "float-end text-muted fs-7"},
-                            "3 mins",
-                        ),
-                    ),
-                    tags.div(
-                        {"class": "dropdown-divider"},
-                    ),
-                    tags.a(
-                        {"href": "#", "class": "dropdown-item"},
-                        tags.i(
-                            {"class": "fas fa-users fa-fw me-2"},
-                        ),
-                        "8 friend requests",
-                        tags.span(
-                            {"class": "float-end text-muted fs-7"},
-                            "12 hours",
-                        ),
-                    ),
-                    tags.div(
-                        {"class": "dropdown-divider"},
-                    ),
-                    tags.a(
-                        {"href": "#", "class": "dropdown-item"},
-                        tags.i(
-                            {"class": "fas fa-file fa-fw me-2"},
-                        ),
-                        "3 new reports",
-                        tags.span(
-                            {"class": "float-end text-muted fs-7"},
-                            "2 days",
-                        ),
-                    ),
-                    tags.div(
-                        {"class": "dropdown-divider"},
-                    ),
-                    tags.a(
-                        {"href": "#", "class": "dropdown-item dropdown-footer"},
-                        "See All Notifications",
-                    ),
-                ),
-            ),
-            tags.li(
-                {"class": "nav-item dropdown user-menu"},
-                tags.a(
-                    {
-                        "href": "#",
-                        "class": "nav-link dropdown-toggle",
-                        "data-bs-toggle": "dropdown",
-                    },
-                    tags.img(
-                        {
-                            "src": "./assets/img/user2-160x160.jpg",
-                            "class": "user-image img-circle shadow",
-                            "alt": "User Image",
-                        }
-                    ),
-                    tags.span(
-                        {"class": "d-none d-md-inline"},
-                        "Alexander Pierce",
-                    ),
-                ),
-                tags.ul(
-                    {"class": "dropdown-menu dropdown-menu-lg dropdown-menu-end"},
-                    # User image
-                    tags.li(
-                        {"class": "user-header bg-primary"},
-                        tags.img(
-                            {
-                                "src": "./assets/img/user2-160x160.jpg",
-                                "class": "img-circle shadow",
-                                "alt": "User Image",
-                            }
-                        ),
-                        tags.p(
-                            "Alexander Pierce - Web Developer",
-                            tags.small("Member since Nov. 2012"),
-                        ),
-                    ),
-                    # Menu Body
-                    tags.li(
-                        {"class": "user-body"},
-                        tags.div(
-                            {"class": "row"},
-                            tags.div(
-                                {"class": "col-4 text-center"},
-                                tags.a(
-                                    {"href": "#"},
-                                    "Followers",
-                                ),
-                            ),
-                            tags.div(
-                                {"class": "col-4 text-center"},
-                                tags.a(
-                                    {"href": "#"},
-                                    "Sales",
-                                ),
-                            ),
-                            tags.div(
-                                {"class": "col-4 text-center"},
-                                tags.a(
-                                    {"href": "#"},
-                                    "Friends",
-                                ),
-                            ),
-                        ),
-                        # /.row
-                    ),
-                    # Menu Footer--,
-                    tags.li(
-                        {"class": "user-footer"},
-                        tags.a(
-                            {"href": "#", "class": "btn btn-default btn-flat"},
-                            "Profile",
-                        ),
-                        tags.a(
-                            {
-                                "href": "#",
-                                "class": "btn btn-default btn-flat float-end",
-                            },
-                            "Sign out",
-                        ),
-                    ),
-                ),
-            ),
-            # TODO tackel in v4.1
-            # tags.li({"class":"nav-item"},
-            tags.a(
-                {
-                    "class": "nav-link",
-                    "data-widget": "fullscreen",
-                    "href": "#",
-                    "role": "button",
-                },
-                tags.i(
-                    {"class": "fas fa-expand-arrows-alt"},
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {
-                    "class": "nav-link",
-                    "data-widget": "control-sidebar",
-                    "data-slide": "true",
-                    "href": "#",
-                    "role": "button",
-                },
-                tags.i(
-                    {"class": "fas fa-th-large"},
-                ),
-            ),
-        ),
     )

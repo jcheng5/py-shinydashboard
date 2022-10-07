@@ -2,8 +2,9 @@ from typing import Optional, Union
 import htmltools as ht
 from htmltools import tags
 from ._utils import wrap_with_tag
+from faicons import icon_svg
 
-from htmltools._core import Tag  # type: ignore
+from htmltools._core import Tag, Tagifiable  # type: ignore
 
 
 def brand(
@@ -12,11 +13,27 @@ def brand(
     href: Optional[str] = None,
     img_src: Optional[str] = None,
     img_alt: Optional[str] = None,
-    img_class: str = "brand-image opacity-80 shadow",
+    img_class: str = "brand-image shadow",
 ) -> ht.TagChild:
-    if href is None:
-        href = "javascript:;"
+    """An element to hold the dashboard title and/or logo, for use in :func:`sidebar`.
 
+    Parameters
+    ----------
+    title
+        The main title of the dashboard. Usually a string, but can be any valid htmltools content.
+    href
+        A link target. Use ``None`` if no link is desired, or ``""`` to create a link that reloads the page.
+    img_src
+        An image URL; can be an absolute ``https`` URL, or a static file that's `served by Shiny <https://shiny.rstudio.com/py/docs/ui-static.html>`_. With the default ``img_class`` argument, the image will be displayed at a relatively small size, to the left of the title.
+    img_alt
+        A textual description of the image, for accessibility purposes.
+    img_class
+        CSS classes to apply to the ``<img>`` tag.
+
+    Returns
+    -------
+        A :class:`Tag` object.
+    """
     img = None
     if img_src:
         img = tags.img(
@@ -27,7 +44,9 @@ def brand(
             },
         )
 
-    return tags.a(
+    container = tags.a if href is not None else tags.div
+
+    return container(
         {"href": href, "class": "brand-link"},
         img,
         tags.span(
@@ -41,10 +60,9 @@ def sidebar_menu_tab(
     title: ht.TagChild,
     tab_name: str,
     *,
-    icon: ht.TagChild = tags.i(
-        {"class": "nav-icon far fa-circle"},
-    ),
+    icon: ht.TagChild = icon_svg("circle", style="regular"),
 ) -> ht.Tag:
+
     # id of the pane we're controlling
     content_id = f"shinydash-tab-{tab_name}"
     # id of the current element
@@ -73,9 +91,7 @@ def sidebar_menu_link(
     title: ht.TagChild,
     href: str,
     *,
-    icon: ht.TagChild = tags.i(
-        {"class": "nav-icon far fa-circle"},
-    ),
+    icon: ht.TagChild = icon_svg("circle", style="regular"),
 ) -> ht.Tag:
 
     return tags.li(
@@ -119,7 +135,7 @@ def navset(*tabs: ht.TagChildArg, **kwargs: ht.TagAttrArg):
 def sidebar_submenu(
     title: ht.TagChild,
     *args: ht.TagChild,
-    icon: ht.TagChild = tags.i({"class": "nav-icon fas fa-circle"}),
+    icon: ht.TagChild = icon_svg("circle", style="solid"),
     expanded: bool = False,
 ) -> ht.Tag:
     return tags.li(
@@ -142,6 +158,23 @@ def sidebar_submenu(
 
 
 def sidebar(title: Union[str, ht.TagChild], *args: ht.TagChild) -> ht.Tag:
+    """A collapsible sidebar, for use in :func:`page`. Contains :func:`brand` and a navigational menu.
+
+    Parameters
+    ----------
+    title
+        A title to be rendered at the top-left corner of the dashboard. You'll generally want to use :func:`brand` here (or just use a bare string, which we'll then automatically wrap in :func:`brand` for you).
+    args
+        A combination of any of the following:
+
+        - :func:`sidebar_menu_tab` - For navigating to different tabs within the dashboard.
+        - :func:`sidebar_menu_link` - For external links that navigate away from the dashboard.
+        - :func:`sidebar_submenu` - For nested menus that contain tabs, external links, or yet another level of menus.
+
+    Returns
+    -------
+        A :class:`Tag` object, ready to be used as the ``sidebar`` argument in :func:`page`.
+    """
     title = wrap_with_tag(title, brand)
 
     # Main Sidebar Container
@@ -181,423 +214,3 @@ def sidebar(title: Union[str, ht.TagChild], *args: ht.TagChild) -> ht.Tag:
         ),
         # /.sidebar
     )
-
-
-def rubbish():
-    return [
-        tags.li(
-            {"class": "nav-item menu-open"},
-            tags.a(
-                {
-                    "href": "javascript:;",
-                    "class": "nav-link active",
-                },
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Dashboard",
-                    tags.i(
-                        {"class": "end fas fa-angle-right"},
-                    ),
-                ),
-            ),
-            tags.ul(
-                {"class": "nav nav-treeview"},
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./index.html",
-                            "class": "nav-link active",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Dashboard v1",
-                        ),
-                    ),
-                ),
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./index2.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Dashboard v2",
-                        ),
-                    ),
-                ),
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./index3.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Dashboard v3",
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item "},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link "},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Widgets",
-                    tags.i(
-                        {"class": "end fas fa-angle-right"},
-                    ),
-                ),
-            ),
-            tags.ul(
-                {"class": "nav nav-treeview"},
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./pages/widgets/small-box.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Small Box",
-                        ),
-                    ),
-                ),
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./pages/widgets/info-box.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "info Box",
-                        ),
-                    ),
-                ),
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./pages/widgets/cards.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Cards",
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item "},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link "},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Layout Options",
-                    tags.span(
-                        {"class": "badge bg-info float-end me-3"},
-                        "6",
-                    ),
-                    tags.i(
-                        {"class": "end fas fa-angle-right"},
-                    ),
-                ),
-            ),
-            tags.ul(
-                {"class": "nav nav-treeview"},
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./pages/layout/fixed-sidebar.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Fixed Sidebar",
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item "},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link "},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Forms",
-                    tags.i(
-                        {"class": "end fas fa-angle-right"},
-                    ),
-                ),
-            ),
-            tags.ul(
-                {"class": "nav nav-treeview"},
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./pages/forms/general.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "General Elements",
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item "},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link "},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Tables",
-                    tags.i(
-                        {"class": "end fas fa-angle-right"},
-                    ),
-                ),
-            ),
-            tags.ul(
-                {"class": "nav nav-treeview"},
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "./pages/tables/simple.html",
-                            "class": "nav-link ",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Simple Tables",
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-header"},
-            "MULTI LEVEL EXAMPLE",
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link"},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Level 1",
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link"},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Level 1",
-                    tags.i(
-                        {"class": "end fas fa-angle-right"},
-                    ),
-                ),
-            ),
-            tags.ul(
-                {"class": "nav nav-treeview"},
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "javascript:;",
-                            "class": "nav-link",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Level 2",
-                        ),
-                    ),
-                ),
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "javascript:;",
-                            "class": "nav-link",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Level 2",
-                            tags.i(
-                                {"class": "end fas fa-angle-right"},
-                            ),
-                        ),
-                    ),
-                    tags.ul(
-                        {"class": "nav nav-treeview"},
-                        tags.li(
-                            {"class": "nav-item"},
-                            tags.a(
-                                {
-                                    "href": "javascript:;",
-                                    "class": "nav-link",
-                                },
-                                tags.i(
-                                    {"class": "nav-icon far fa-dot-circle"},
-                                ),
-                                tags.p(
-                                    "Level 3",
-                                ),
-                            ),
-                        ),
-                        tags.li(
-                            {"class": "nav-item"},
-                            tags.a(
-                                {
-                                    "href": "javascript:;",
-                                    "class": "nav-link",
-                                },
-                                tags.i(
-                                    {"class": "nav-icon far fa-dot-circle"},
-                                ),
-                                tags.p(
-                                    "Level 3",
-                                ),
-                            ),
-                        ),
-                        tags.li(
-                            {"class": "nav-item"},
-                            tags.a(
-                                {
-                                    "href": "javascript:;",
-                                    "class": "nav-link",
-                                },
-                                tags.i(
-                                    {"class": "nav-icon far fa-dot-circle"},
-                                ),
-                                tags.p(
-                                    "Level 3",
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                tags.li(
-                    {"class": "nav-item"},
-                    tags.a(
-                        {
-                            "href": "javascript:;",
-                            "class": "nav-link",
-                        },
-                        tags.i(
-                            {"class": "nav-icon far fa-circle"},
-                        ),
-                        tags.p(
-                            "Level 2",
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link"},
-                tags.i(
-                    {"class": "nav-icon fas fa-circle"},
-                ),
-                tags.p(
-                    "Level 1",
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-header"},
-            "LABELS",
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link"},
-                tags.i(
-                    {"class": "nav-icon far fa-circle text-danger"},
-                ),
-                tags.p(
-                    {"class": "text"},
-                    "Important",
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link"},
-                tags.i(
-                    {"class": "nav-icon far fa-circle text-warning"},
-                ),
-                tags.p(
-                    "Warning",
-                ),
-            ),
-        ),
-        tags.li(
-            {"class": "nav-item"},
-            tags.a(
-                {"href": "javascript:;", "class": "nav-link"},
-                tags.i(
-                    {"class": "nav-icon far fa-circle text-info"},
-                ),
-                tags.p(
-                    "Informational",
-                ),
-            ),
-        ),
-    ]
