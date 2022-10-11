@@ -109,7 +109,7 @@ def header(
 ) -> ht.Tag:
     """A header, for use in :func:`page`.
 
-    The header for a dashboard, suitable for use as the ``header`` argument in :func:`page`.
+    The header for a dashboard, suitable for use as the ``header`` argument of :func:`page`.
 
     Note that shinydashboard headers do not include the logo or tab navigation; instead, those are in the sidebar.
 
