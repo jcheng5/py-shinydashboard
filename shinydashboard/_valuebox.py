@@ -22,12 +22,50 @@ def value_box(
     gradient: bool = False,
     class_: Optional[str] = None,
 ) -> ht.Tag:
+    """A value box, for displaying key metrics in the :func:`body` of a dashboard.
+
+    Intended to be used within a :func:`row`.
+
+    Parameters
+    ----------
+    value
+        The value to display in the box. Usually a number or short text.
+    subtitle
+        Subtitle text, usually describing the value.
+    icon
+        An icon to display prominently, likely from :func:`icon_svg`.
+    color
+        A `Bootstrap color <https://getbootstrap.com/docs/5.2/customize/color/>`_, e.g.
+        ``"light"`` (the default), ``"dark"``, ``"success"``, etc.
+    width
+        How wide the card should be, in `Bootstrap grid
+        <https://getbootstrap.com/docs/5.2/layout/grid/>`_ columns; must be an integer
+        between 1 and 12, inclusive. If ``None``, then the card's width will be
+        automatically determined based on the amount of space available.
+    href, optional
+        If not ``None``, treats the entire value box as a clickable link to the
+        specified URL.
+    footer
+        Optional content to insert into a band at the bottom of the box.
+    gradient
+        Whether to apply a subtle gradient effect to the background color.
+    class_
+        A string specifying additional CSS class(es) to apply to the value box element.
+        Multiple classes should be space-separated.
+
+    Returns
+    -------
+        A :class:`Tag` object, suitable for inclusion in a :func:`row`.
+    """
     subtitle = wrap_with_tag(subtitle, tags.p)
 
     if icon is not None:
         icon = tags.div(
             {"class": "icon"},
-            icon,
+            tags.div(
+                {"class": "icon-inner"},
+                icon,
+            ),
         )
 
     footer_tag: Optional[ht.Tag]
@@ -46,6 +84,7 @@ def value_box(
             "class": join("small-box", bg_classes(color, gradient), class_),
             "href": href,
         },
+        icon,
         tags.div(
             {"class": "inner"},
             tags.h3(
@@ -53,7 +92,7 @@ def value_box(
             ),
             subtitle,
         ),
-        icon,
+        tags.div(class_="clearfix") if icon is not None else None,
         footer_tag,
     )
 
@@ -76,11 +115,10 @@ def render_value_box(
 
 def info_box(
     title: ht.TagChild,
-    value: Optional[ht.TagChild] = None,
+    value: ht.TagChild,
     *,
     subtitle: Optional[ht.TagChild] = None,
-    # icon: ht.TagChild = tags.i(class_="fas fa-thumbs-up"),
-    icon: ht.TagChild = icon_svg("thumbs-up", margin_left=None, margin_right=None),
+    icon: ht.TagChild = icon_svg("thumbs-up"),
     color: str = "secondary",
     width: Optional[int] = None,
     href: Optional[str] = None,
@@ -88,7 +126,51 @@ def info_box(
     gradient: bool = False,
     class_: Optional[str] = None,
 ) -> ht.Tag:
-    subtitle = wrap_with_tag(subtitle, tags.p)
+    """An info box, for displaying secondary metrics in the :func:`body` of a dashboard.
+
+    Intended to be used within a :func:`row`.
+
+    Compared to :func:`value_box`, :func:`info_box` is smaller, and less colorful
+    (unless ``fill=True``). It also has a title that appears above the value plus a
+    subtitle that appears below the value, while :func:`value_box` only has a subtitle
+    that appears below the value.
+
+    Parameters
+    ----------
+    title
+        Title text, usually describing the value. Appears above the value.
+    value
+        The value to display in the box. Usually a number or short text.
+    subtitle
+        Explanatory text that appears below the value.
+    icon
+        An icon to display prominently, likely from :func:`icon_svg`. The default is a
+        thumbs-up icon.
+    color
+        A `Bootstrap color <https://getbootstrap.com/docs/5.2/customize/color/>`_, e.g.
+        ``"light"`` (the default), ``"dark"``, ``"success"``, etc.
+    width, optional
+        How wide the card should be, in `Bootstrap grid
+        <https://getbootstrap.com/docs/5.2/layout/grid/>`_ columns; must be an integer
+        between 1 and 12, inclusive. If ``None``, then the card's width will be
+        automatically determined based on the amount of space available.
+    href, optional
+        If not ``None``, treats the entire value box as a clickable link to the
+        specified URL.
+    fill, optional
+        If ``True``, the specified color fills the entire info box; if ``False`` (the
+        default), the color is only applied in a box surrounding the icon.
+    gradient, optional
+        Whether to apply a subtle gradient effect to the background color.
+    class_, optional
+        A string specifying additional CSS class(es) to apply to the value box element.
+        Multiple classes should be space-separated.
+
+    Returns
+    -------
+        A :class:`Tag` object, suitable for inclusion in a :func:`row`.
+    """
+    subtitle = wrap_with_tag(subtitle, tags.div)
 
     if href is None:
         container = tags.div

@@ -12,7 +12,12 @@ API Reference
 
 Page and header
 ~~~~~~~~~~~~~~~
-Functions for creating the top-level shinydashboard page, and the links in the header.
+The top-level function for a shinydashboard UI is :func:`page`, which takes three main
+children: :func:`header`, :func:`sidebar`, and :func:`body`.
+
+The header is used to display external links, and you can also put dropdown menus on the
+right side of the header.
+
 
 .. autosummary::
     :toctree: reference/

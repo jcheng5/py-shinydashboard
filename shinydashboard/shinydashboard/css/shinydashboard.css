@@ -17,3 +17,25 @@
 
   min-height: 100vh;
 }
+
+.small-box .icon {
+  float: right;
+}
+
+.small-box .icon > .icon-inner {
+  font-size: 60px;
+  transition: transform 0.3s linear;
+  padding-bottom: 12px;
+  margin-right: 0.15em;
+}
+
+/* Prevent info-box text from being blue when href is non-None */
+a.info-box {
+  color: inherit;
+}
+
+/* For faicons.icon_svg to look properly centered */
+.info-box > .info-box-icon > svg {
+  margin-left: auto;
+  margin-right: auto !important;
+}
