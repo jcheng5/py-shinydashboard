@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List, Literal, Optional, Union
 
 import htmltools as ht
@@ -15,6 +17,32 @@ def menu_dropdown(
     badge_status: Optional[str] = "primary",
     header: Optional[ht.TagChild] = None,
 ) -> ht.TagChild:
+    """A drop-down menu, designed to be used as part of a :func:`header`'s
+    ``children_right`` argument, and intended to be filled with :func:`item_message` and
+    :func:`item_notification` objects.
+
+    Parameters
+    ----------
+    icon
+        An icon to display, that can be clicked to reveal the menu items.
+    args
+        One or more items to display in the dropdown menu; see :func:`item_message` and
+        :func:`item_notification`.
+    badge_value
+        An optional number to display on a badge that overlays the icon. By default, the
+        value will be calculated based on `len(args)`. Pass ``None`` to omit the badge.
+    badge_status
+        The color to use for the badge background. Must be a `Bootstrap color
+        <https://getbootstrap.com/docs/5.2/customize/color/>`_, e.g. ``"light"`` (the
+        default), ``"dark"``, ``"success"``, etc.
+    header
+        Content to display when the menu is dropped down, in a region above the menu
+        items.
+
+    Returns
+    -------
+        A :class:`Tag` object, suitable for inclusion in :func:`header`'s ``children_right`` argument.
+    """
 
     if badge_value == "auto":
         badge_value = len(args)
@@ -72,6 +100,26 @@ def item_message(
     time: Optional[ht.TagChild] = None,
     href: Optional[str] = None,
 ):
+    """A menu item for :func:`menu_dropdown`, representing a message.
+
+    Parameters
+    ----------
+    sender
+        A string or :class:`Tag` to be displayed as the sender.
+    message
+        A string or :class:`Tag` for the message.
+    icon
+        An icon to display to the left of the message.
+    time
+        A string or :class:`Tag` indicating the time of the message.
+    href, optional
+        If provided, turns the entire menu item into a link to this URL.
+
+    Returns
+    -------
+        A :class:`Tag` object, suitable for inclusion in :func:`menu_dropdown`.
+    """
+
     child = tags.div(
         {"class": "d-flex"},
         (
@@ -121,6 +169,24 @@ def item_notification(
     time: Optional[ht.TagChild] = None,
     href: Optional[str] = None,
 ):
+    """A menu item for :func:`menu_dropdown`, representing a generic notification.
+
+    Parameters
+    ----------
+    message
+        A string or :class:`Tag` for the message.
+    icon, optional
+        An icon to display to the left of the message; by default, an exclamation point
+        icon will be displayed.
+    time, optional
+        A string or :class:`Tag` indicating the time of the notification.
+    href, optional
+        If provided, turns the entire menu item into a link to this URL.
+
+    Returns
+    -------
+        A :class:`Tag` object, suitable for inclusion in :func:`menu_dropdown`.
+    """
     child = tags.div(
         {"class": "d-flex"},
         (

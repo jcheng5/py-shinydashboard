@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import functools
 from inspect import iscoroutinefunction
 from typing import Awaitable, Callable, Optional, Union
@@ -25,6 +27,11 @@ def value_box(
     """A value box, for displaying key metrics in the :func:`body` of a dashboard.
 
     Intended to be used within a :func:`row`.
+
+    Use ``value_box`` directly within your Shiny UI definition if the contents and
+    appearance of the value box are intended to be static (i.e. they do not change
+    during the execution of the app). If the contents need to be reactive, use
+    :func:`output_value_box`/:func:`render_value_box` instead.
 
     Parameters
     ----------
@@ -100,6 +107,30 @@ def value_box(
 
 
 def output_value_box(id: str, width: Optional[int] = None) -> ht.Tag:
+    """The UI side of a dynamically rendered :func:`value_box`.
+
+    Put an ``output_value_box`` in your Shiny UI definition, instead of an ordinary
+    :func:`value_box`, if you want the value box to be dynamic (that is, to re-render in
+    reponse to changing inputs and other sources of reactivity).
+
+    See also :func:`render_value_box` for info about providing the server logic for a
+    dynamic value box.
+
+    Parameters
+    ----------
+    id
+        The identifier for the output; must match the name of your corresponding
+        server-side rendering function (see :func:`render_value_box`).
+    width
+        How wide the card should be, in `Bootstrap grid
+        <https://getbootstrap.com/docs/5.2/layout/grid/>`_ columns; must be an integer
+        between 1 and 12, inclusive. If ``None``, then the card's width will be
+        automatically determined based on the amount of space available.
+
+    Returns
+    -------
+        A :class:`Tag` object, to be included somewhere in the :func:`body`.
+    """
     return ui.output_ui(
         id,
         container=ht.div,
@@ -110,6 +141,44 @@ def output_value_box(id: str, width: Optional[int] = None) -> ht.Tag:
 def render_value_box(
     fn: Callable[[], Union[Optional[ht.Tag], Awaitable[Optional[ht.Tag]]]]
 ):
+    """A Shiny render decorator for dynamic :func:`value_box` outputs.
+
+    Here's an example of an value box renderer that would go into the Shiny server
+    function::
+
+        @output
+        @sdb.render_value_box
+        def valueBox1():
+            current_time = datetime.datetime.now().astimezone()
+
+            # datetime.now() isn't inherently reactive, so explicitly
+            # tell Shiny to consider this output dirty 1 second from now
+            reactive.invalidate_later(1)
+
+            return sdb.value_box(
+                current_time.strftime("%I:%M:%S %p"),
+                "Current time",
+                icon=faicons.icon_svg("clock"),
+                color="success",
+            )
+
+    Note that like all Shiny render decorators, ``@render_value_box`` must be *below*
+    (or maybe you think of it as *inside*) the ``@output`` decorator.
+
+    This example would require a matching ``output_value_box("valueBox1")`` to appear in
+    the Shiny UI definition. See :func:`output_value_box` for more information.
+
+    Parameters
+    ----------
+    fn
+        A user-defined function to decorate; its name should match with the
+        corresponding :func:`output_value_box` in the UI. The function should return
+        either a :func:`value_box` object, or ``None``.
+
+    Returns
+    -------
+        A decorated function that must be further decorated with ``@output``.
+    """
     return render_children(fn)
 
 
@@ -135,6 +204,11 @@ def info_box(
     subtitle that appears below the value, while :func:`value_box` only has a subtitle
     that appears below the value.
 
+    Use ``info_box`` directly within your Shiny UI definition if the contents and
+    appearance of the info box are intended to be static (i.e. they do not change during
+    the execution of the app). If the contents need to be reactive, use
+    :func:`output_info_box`/:func:`render_info_box` instead.
+
     Parameters
     ----------
     title
@@ -149,20 +223,20 @@ def info_box(
     color
         A `Bootstrap color <https://getbootstrap.com/docs/5.2/customize/color/>`_, e.g.
         ``"light"`` (the default), ``"dark"``, ``"success"``, etc.
-    width, optional
+    width
         How wide the card should be, in `Bootstrap grid
         <https://getbootstrap.com/docs/5.2/layout/grid/>`_ columns; must be an integer
         between 1 and 12, inclusive. If ``None``, then the card's width will be
         automatically determined based on the amount of space available.
-    href, optional
+    href
         If not ``None``, treats the entire value box as a clickable link to the
         specified URL.
-    fill, optional
+    fill
         If ``True``, the specified color fills the entire info box; if ``False`` (the
         default), the color is only applied in a box surrounding the icon.
-    gradient, optional
+    gradient
         Whether to apply a subtle gradient effect to the background color.
-    class_, optional
+    class_
         A string specifying additional CSS class(es) to apply to the value box element.
         Multiple classes should be space-separated.
 
@@ -215,6 +289,30 @@ def info_box(
 
 
 def output_info_box(id: str, width: Optional[int] = None) -> ht.Tag:
+    """Create an output container for a dynamically rendered :func:`info_box`.
+
+    Put an ``output_info_box`` in your Shiny UI definition, instead of an ordinary
+    :func:`info_box`, if you want the info box to be dynamic (that is, to re-render in
+    reponse to changing inputs and other sources of reactivity).
+
+    See also :func:`render_info_box` for info about providing the server logic for a
+    dynamic info box.
+
+    Parameters
+    ----------
+    id
+        The identifier for the output; must match the name of your corresponding
+        server-side rendering function (see :func:`render_info_box`).
+    width
+        How wide the card should be, in `Bootstrap grid
+        <https://getbootstrap.com/docs/5.2/layout/grid/>`_ columns; must be an integer
+        between 1 and 12, inclusive. If ``None``, then the card's width will be
+        automatically determined based on the amount of space available.
+
+    Returns
+    -------
+        A :class:`Tag` object, to be included somewhere in the :func:`body`.
+    """
     return ui.output_ui(
         id,
         container=ht.div,
@@ -225,6 +323,45 @@ def output_info_box(id: str, width: Optional[int] = None) -> ht.Tag:
 def render_info_box(
     fn: Callable[[], Union[Optional[ht.Tag], Awaitable[Optional[ht.Tag]]]]
 ):
+    """A Shiny render decorator for dynamic :func:`info_box` outputs.
+
+    Here's an example of an info box renderer that would go into the Shiny server
+    function::
+
+        @output
+        @sdb.render_info_box
+        def infoBox1():
+            current_time = datetime.datetime.now().astimezone()
+
+            # datetime.now() isn't inherently reactive, so explicitly
+            # tell Shiny to consider this output dirty 1 second from now
+            reactive.invalidate_later(1)
+
+            return sdb.info_box(
+                "Current time",
+                current_time.strftime("%I:%M:%S %p"),
+                subtitle=str(current_time.tzinfo),
+                icon=faicons.icon_svg("clock"),
+                color="warning",
+            )
+
+    Note that like all Shiny render decorators, ``@render_info_box`` must be *below* (or
+    maybe you think of it as *inside*) the ``@output`` decorator.
+
+    This example would require a matching ``output_info_box("infoBox1")`` to appear in
+    the Shiny UI definition. See :func:`output_info_box` for more information.
+
+    Parameters
+    ----------
+    fn
+        A user-defined function to decorate; its name should match with the
+        corresponding :func:`output_info_box` in the UI. The function should return
+        either an :func:`info_box` object, or ``None``.
+
+    Returns
+    -------
+        A decorated function that must be further decorated with ``@output``.
+    """
     return render_children(fn)
 
 

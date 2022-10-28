@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Dict, Optional, Union
 import htmltools as ht
 from htmltools import tags

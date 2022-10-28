@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 from htmltools import HTMLDependency
 from . import __version__

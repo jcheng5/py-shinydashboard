@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import htmltools as ht
 from htmltools import tags
 from htmltools._core import Tag, Tagifiable  # type: ignore
