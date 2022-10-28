@@ -3,10 +3,9 @@ from __future__ import annotations
 from typing import List, Optional
 
 import htmltools as ht
-from faicons import icon_svg
 from htmltools import tags
 
-from ._utils import join, wrap_with_col
+from ._utils import wrap_with_col
 
 
 def card(
